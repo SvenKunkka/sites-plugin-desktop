@@ -1,6 +1,5 @@
 "use client";
 
-import JSZip from "jszip";
 import {
   AlertTriangle,
   Archive,
@@ -513,6 +512,7 @@ export default function StepConverter() {
       return;
     }
 
+    const { default: JSZip } = await import("jszip");
     const zip = new JSZip();
     done.forEach((item) => {
       if (item.stl) {
