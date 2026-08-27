@@ -9,8 +9,12 @@
     "dev": "vinext dev",
     "build": "vinext build",
     "start": "vinext start",
-    "lint": "eslint . --ignore-pattern dist --ignore-pattern .next",
-    "db:generate": "drizzle-kit generate"
+    "lint": "eslint . --ignore-pattern dist --ignore-pattern dist-desktop --ignore-pattern .next --ignore-pattern src-tauri/target",
+    "db:generate": "drizzle-kit generate",
+    "desktop:dev": "vite --config vite.desktop.config.ts",
+    "desktop:build": "vite build --config vite.desktop.config.ts",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",
@@ -24,6 +28,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.37.1",
     "@tailwindcss/postcss": "4.2.1",
+    "@tauri-apps/cli": "^2.9.3",
     "@types/node": "22.19.19",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
