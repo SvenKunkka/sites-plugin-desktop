@@ -1,70 +1,67 @@
-# vinext-starter
+# STEP to STL Batch Converter
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+一个支持浏览器和 macOS 桌面端的 STEP/STP 批量转 STL 工具。所有模型都在本机解析和转换，不会上传到服务器。
 
-## Prerequisites
+![STEP to STL Batch Converter 界面](public/screenshot.jpeg)
 
-- Node.js `>=22.13.0`
+## 功能
 
-## Quick Start
+- 拖放或多选 `.step`、`.stp` 文件
+- 批量转换为二进制 `.stl`
+- 调整线性偏差和角度偏差，控制网格精度
+- 支持毫米、厘米、米、英寸和英尺
+- 显示每个文件的转换状态、耗时、网格数和三角面数
+- 单独下载 STL，或将全部结果打包为 ZIP
+- 停止任务、重试失败项目和管理转换队列
+- 通过 Web Worker 在本机执行 OpenCascade WASM 转换
+
+## 隐私
+
+输入文件、模型几何和转换结果都保留在本机。浏览器版和桌面版均不需要把 CAD 文件上传到服务器。
+
+## 运行浏览器版本
+
+需要 Node.js `>=22.13.0`。
 
 ```bash
 npm install
 npm run dev
+```
+
+生产构建：
+
+```bash
 npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+## 运行 macOS 桌面版本
 
-## Included Shape
+桌面版基于 Tauri 2，需要安装 Rust 工具链和 Tauri 在 macOS 上所需的系统依赖。
 
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm install
+npm run tauri:dev
 ```
 
-## Useful Commands
+生成 `.app` 和 `.dmg`：
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+```bash
+npm run tauri:build
+```
 
-## Learn More
+当前桌面版最低支持 macOS 10.15。
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+## 技术栈
+
+- Next.js 16、React 19、TypeScript、vinext
+- OpenCascade WASM、Web Workers、JSZip
+- Tauri 2、Rust、Vite
+- Cloudflare Workers 与 OpenAI Workspace Sites 托管配置
+
+## 项目结构
+
+- `app/step-converter.tsx`：转换队列与用户界面
+- `public/converter-worker.js`：STEP/STP 解析及 STL 生成
+- `desktop/`：Tauri 桌面版前端入口
+- `src-tauri/`：macOS 桌面应用配置与 Rust 入口
+- `.openai/hosting.json`：OpenAI Workspace Sites 托管配置
