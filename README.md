@@ -1,5 +1,13 @@
 # STEP to STL Batch Converter
 
+## English Overview
+
+STEP to STL Batch Converter is a local-first tool for converting multiple `.step` or `.stp` CAD files into binary `.stl` meshes. It is available as a browser application and a macOS desktop application. Files are parsed and converted on the user's device and are never uploaded to a server.
+
+The interface supports drag-and-drop batch input, adjustable linear and angular tolerances, millimeter/centimeter/meter/inch/foot units, per-file status and mesh statistics, individual downloads, ZIP export, cancellation, retry, and queue management. Conversion runs in a Web Worker using OpenCascade WASM so that heavy geometry processing does not block the main interface.
+
+For the browser version, install Node.js 22.13 or newer, run `npm install`, and then run `npm run dev`. The Tauri 2 desktop build additionally requires Rust and the macOS system dependencies documented by Tauri. See the Chinese sections below for complete development and packaging commands.
+
 一个支持浏览器和 macOS 桌面端的 STEP/STP 批量转 STL 工具。所有模型都在本机解析和转换，不会上传到服务器。
 
 ![STEP to STL Batch Converter 界面](public/screenshot.jpeg)
